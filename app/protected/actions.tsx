@@ -1,7 +1,8 @@
 'use server'
 import { createClient } from "@/utils/supabase/server"
-const supabase = createClient()
 import { toDoItemsType } from "@/types"
+
+const supabase = createClient()
 
 //delete
 export async function deleteAction(id:number) {
@@ -12,15 +13,19 @@ export async function deleteAction(id:number) {
 
 // read
 export async function readAction() {
-    const { data: toDoItems, error } = await supabase.from('todo_table').select('*').order('id', {ascending:true});    
-    if(error){throw new Error("Did not fetch data")}
-    return toDoItems;
+//get authenticated user
+const {data:{user}} = await supabase.auth.getUser();
+const { data: toDoItems, error } = await supabase.from('todo').select('*').order('id', {ascending:true}).eq('user_id', user?.id);
+if(error){throw new Error("Did not fetch data")}
+return toDoItems;
 }
 
 //create
 export async function  createAction({name, priority, done}:toDoItemsType){
-    const { error } = await supabase.from('todo_table').insert({ name: name, priority:priority, done:done })
-    if(error){throw new Error("Did not create row")}
+//get authenticated user
+const {data:{user}} = await supabase.auth.getUser();
+const { error } = await supabase.from('todo').insert({ name: name, priority:priority, done:done, user_id:user?.id })
+if(error){throw new Error("Did not create row")}
 }
 
 //update
