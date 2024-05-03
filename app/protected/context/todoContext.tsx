@@ -51,7 +51,7 @@ export const ToDoProvider= ({children}:{children:ReactNode})=>{
             }
         }
         fetchData();
-    }, [triggerRefresh]);
+    }, []);
 
     //delete
     const handleDelete = async (id:number) => {
@@ -63,8 +63,15 @@ export const ToDoProvider= ({children}:{children:ReactNode})=>{
     //insert
     const handleInsert = async ()=>{
         const newItem = {id, name, priority, done}
-        await createAction(newItem)
-        setTriggerRefresh(prev=>!prev)
+        try{
+            const createdItem = await createAction(newItem)
+            if(createdItem){
+                setToDoItems(currentItems=>[...currentItems, createdItem])
+            }
+        }
+        catch(error){
+            throw error
+        }
         setName("")
         setPriority(0)
     }
@@ -72,8 +79,15 @@ export const ToDoProvider= ({children}:{children:ReactNode})=>{
     //update
     const handleUpdate = async (id:number)=>{
         const updatedItem = {id, name, priority, done}
-        await updateAction(updatedItem)
-        setTriggerRefresh(prev=>!prev)
+        try{
+            const editedItems = await updateAction(updatedItem)
+            if(editedItems){
+                setToDoItems(newlyUpdatedItems=>[...newlyUpdatedItems, editedItems])
+            }
+        }
+        catch(error){
+            throw error
+        }
         setName('')
         setPriority(0)
     }
