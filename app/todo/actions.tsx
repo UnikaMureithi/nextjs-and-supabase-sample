@@ -12,25 +12,25 @@ export async function deleteAction(id:number) {
 
 // read
 export async function readAction() {
-    const { data: toDoItems, error } = await supabase.from('todo').select('*').order('id', {ascending:true});    
+    const { data: toDoItems, error } = await supabase.from('todo_table').select('*').order('id', {ascending:true});    
     if(error){throw new Error("Did not fetch data")}
     return toDoItems;
 }
 
 //create
 export async function  createAction({name, priority, done}:toDoItemsType){
-    const { error } = await supabase.from('todo').insert({ name: name, priority:priority, done:done })
+    const { error } = await supabase.from('todo_table').insert({ name: name, priority:priority, done:done })
     if(error){throw new Error("Did not create row")}
 }
 
 //update
 export async function updateAction({id, name, priority, done}:toDoItemsType){
-    const {error} = await supabase.from('todo').update({name:name, priority:priority, done:done}).eq('id',id)    
+    const {error} = await supabase.from('todo_table').update({name:name, priority:priority, done:done}).eq('id',id)    
     if(error){throw new Error("Did not update row")}
 }
 
 //update checked box separate
 export async function updateCheckboxAction(id:number, done:boolean){
-    const {error}= await supabase.from('todo').update({done:done}).eq('id',id)
+    const {error}= await supabase.from('todo_table').update({done:done}).eq('id',id)
     if(error){throw new Error("Did not update Check")}
 }
