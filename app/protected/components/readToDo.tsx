@@ -8,8 +8,7 @@ import UpdateToDo from "./updateToDo"
 
 export default function ReadToDo() {
 
-    const {toDoItems, tableHeaderNames, handleDelete, handleCheckBoxUpdate} = useToDo();
-
+    const {toDoItems, tableHeaderNames, handleDelete, handleCheckBoxUpdate, loading} = useToDo();
     return (
         <Table className="mt-10">
             <TableHeader>
@@ -32,9 +31,9 @@ export default function ReadToDo() {
                         }
                     </TableCell>
                     <TableCell className="flex justify-center align-middle mt-2">
-                        <input type="checkbox" checked={todoItem.done} className="border-gray-600" onChange={(e)=>{
-                            e.preventDefault()
-                            handleCheckBoxUpdate(todoItem.id, e.target.checked)
+                    <input type="checkbox" checked={todoItem.done} className="border-gray-600" disabled={loading} onChange={(e)=>{
+                        e.preventDefault()
+                        handleCheckBoxUpdate(todoItem.id, e.target.checked)
                         }}/> 
                     </TableCell>
                     <TableCell>

@@ -15,7 +15,7 @@ export async function deleteAction(id:number) {
 export async function readAction() {
 //get authenticated user
 const {data:{user}} = await supabase.auth.getUser();
-const { data: toDoItems, error } = await supabase.from('todo').select('*').order('id', {ascending:true}).eq('user_id', user?.id);
+const { data: toDoItems, error } = await supabase.from('todo_table').select('*').order('id', {ascending:true}).eq('user_id', user?.id);
 if(error){throw new Error("Did not fetch data")}
 return toDoItems;
 }
@@ -24,7 +24,7 @@ return toDoItems;
 export async function  createAction({name, priority, done}:toDoItemsType){
 //get authenticated user
 const {data:{user}} = await supabase.auth.getUser();
-const { error } = await supabase.from('todo').insert({ name: name, priority:priority, done:done, user_id:user?.id })
+const { error } = await supabase.from('todo_table').insert({ name: name, priority:priority, done:done, user_id:user?.id })
 if(error){throw new Error("Did not create row")}
 }
 
