@@ -1,9 +1,8 @@
-import DeployButton from "@/components/DeployButton";
-import AuthButton from "@/components/AuthButton";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
-import ToDO from "../todo/page";
-
+import ToDO from "./components/todo";
+import ToDoHeader from "./components/todoHeader";
+import ToDoFooter from "./components/todoFooter";
 export default async function ProtectedPage() {
   const supabase = createClient();
 
@@ -20,11 +19,11 @@ export default async function ProtectedPage() {
       <div className="w-full">
         <nav className="w-full flex justify-center border-b border-b-foreground/10 h-16">
           <div className="w-full max-w-4xl flex justify-between items-center p-3 text-sm">
-            <DeployButton />
-            <AuthButton />
           </div>
         </nav>
       </div>
+
+      <ToDoHeader/>
 
       <ToDO/>
 
@@ -45,6 +44,7 @@ export default async function ProtectedPage() {
           </a>
         </p>
       </footer>
+      <ToDoFooter/>
     </div>
   );
 }
