@@ -56,7 +56,8 @@ export const ToDoProvider= ({children}:{children:ReactNode})=>{
     //delete
     const handleDelete = async (id:number) => {
         await deleteAction(id);
-        setTriggerRefresh(prev => !prev)
+        const remainingItems = toDoItems.filter(item => item.id != id)
+        setToDoItems(remainingItems)
     };
 
     //insert
@@ -82,8 +83,8 @@ export const ToDoProvider= ({children}:{children:ReactNode})=>{
         try{
             setLoading(true)
             await updateCheckboxAction(id, done)
-            setTriggerRefresh(prev=>!prev)
-        }
+            const updatedItems = toDoItems.map(item=>item.id === id ? {...item, done:done} : item)
+            setToDoItems(updatedItems)        }
         catch(error){
             throw error;
         }
