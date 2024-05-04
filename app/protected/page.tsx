@@ -3,7 +3,7 @@ import { createClient } from "@/utils/supabase/server";
 import AuthButton from "@/components/AuthButton";
 import { redirect } from "next/navigation";
 import ToDO from "./components/todo";
-import ToDoHeader from "./components/todoHeader";
+// import ToDoHeader from "./components/todoHeader";
 import ToDoFooter from "./components/todoFooter";
 export default async function ProtectedPage() {
   const supabase = createClient();
@@ -25,7 +25,7 @@ export default async function ProtectedPage() {
         </nav>
       </div>
 
-      <ToDoHeader/>
+      {/* <ToDoHeader/> */}
       <AuthButton />
       <ToDO/>
 
