@@ -4,11 +4,42 @@ import { Button } from "@/components/ui/button"
 import { toDoItemsType } from "@/types"
 import { useToDo } from "../context/todoContext"
 import UpdateToDo from "./updateToDo"
-
+import { useEffect, useState } from 'react';
+import { createClient } from "@/utils/supabase/client" // Assuming you have a supabase client initialized in a separate file
 
 export default function ReadToDo() {
+    const [toDoItems, setToDoItems] = useState<toDoItemsType[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+    const supabase = createClient();
 
-    const {toDoItems, tableHeaderNames, handleDelete, handleCheckBoxUpdate, loading} = useToDo();
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const { data: toDoItems, error } = await supabase.from('todo_table').select('*').order('id', { ascending: true });
+                if (error) {
+                    throw new Error("Did not fetch data");
+                }
+                setToDoItems(toDoItems || []);
+            } catch (error) {
+                console.error(error);
+                // Handle error
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    const { tableHeaderNames, handleCheckBoxUpdate } = useToDo();
+
+    //delete
+ async function deleteAction(id:number) {
+    console.log("Deleted successfully")
+    const { error } = await supabase.from('todo_table').delete().eq('id', id)
+    if(error){throw new Error("Did not fetch component")}
+}
+
     return (
         <Table className="mt-10">
             <TableHeader>
@@ -19,9 +50,8 @@ export default function ReadToDo() {
                 </TableRow>
             </TableHeader>
             <TableBody>
-            {toDoItems && toDoItems.length > 0 ? toDoItems.map((todoItem:toDoItemsType, index:number)=>(
+            {toDoItems.length > 0 ? toDoItems.map((todoItem)=>(
                 <TableRow key={todoItem.id}>
-                    <TableCell>{index+1}</TableCell>
                     <TableCell className="text-center">{todoItem.name}</TableCell>
                     <TableCell>
                         {
@@ -31,10 +61,7 @@ export default function ReadToDo() {
                         }
                     </TableCell>
                     <TableCell className="flex justify-center align-middle mt-2">
-                    <input type="checkbox" checked={todoItem.done} className="border-gray-600" disabled={loading} onChange={(e)=>{
-                        e.preventDefault()
-                        handleCheckBoxUpdate(todoItem.id, e.target.checked)
-                        }}/> 
+                        {todoItem.done ? "Yes" : "No"}
                     </TableCell>
                     <TableCell>
                             <div className="flex flex-row items-center justify-center">
@@ -42,7 +69,7 @@ export default function ReadToDo() {
                                     <UpdateToDo todoItem={todoItem}/>
                                 </div>
                             <div>
-                                <Button variant="destructive" className="ml-5 bg-[#C30010] text-white" onClick={()=>handleDelete(todoItem.id)}>Delete</Button>
+                                <Button variant="destructive" className="ml-5 bg-[#C30010] text-white" onClick={()=>deleteAction(todoItem.id)}>Delete</Button>
                             </div>
                         </div>
                     </TableCell>
@@ -54,5 +81,5 @@ export default function ReadToDo() {
             )}
             </TableBody>
         </Table>
-  )
+    )
 }

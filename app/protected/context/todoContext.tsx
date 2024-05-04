@@ -3,6 +3,8 @@ import { readAction, deleteAction, createAction, updateAction, updateCheckboxAct
 import { toDoItemsType } from "@/types"
 
 interface ToDoContextType{
+    id:number;
+    setId: (id:number) => void;
     toDoItems:toDoItemsType[];
     name:string;
     priority:number;
@@ -19,6 +21,7 @@ interface ToDoContextType{
     handleDelete:(id:number)=>Promise<void>;
     handleUpdate:(id:number)=>Promise<void>;
     handleCheckBoxUpdate: (id:number, done:boolean)=>Promise<void>;
+    
 }
 
 export const ToDoContext= createContext<ToDoContextType | undefined>(undefined)
@@ -40,18 +43,22 @@ export const ToDoProvider= ({children}:{children:ReactNode})=>{
         "Task Completion",
         "Actions"
     ]
-
     useEffect(() => {
         async function fetchData() {
             try {
                 const loadedToDoItems = await readAction();
-                setToDoItems(loadedToDoItems);
+                setToDoItems(loadedToDoItems || []);
+
+                console.log(loadedToDoItems);
             } catch (error) {
                 console.error('Failed to load todo items:', error);
             }
         }
         fetchData();
+
+        
     }, []);
+ 
 
     //delete
     const handleDelete = async (id:number) => {
@@ -110,7 +117,7 @@ export const ToDoProvider= ({children}:{children:ReactNode})=>{
     return(
         <ToDoContext.Provider value={{
             toDoItems, name, priority, done, setName, setPriority, setDone, handleInsert, handleUpdate, handleDelete, handleCheckBoxUpdate, 
-            tableHeaderNames, updateTask, setUpdateTask, loading, setLoading
+            tableHeaderNames, updateTask, setUpdateTask, loading, setLoading, id, setId,
         }}>
             {children}
         </ToDoContext.Provider>
