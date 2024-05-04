@@ -31,7 +31,7 @@ export default async function ProtectedPage() {
         <main className="flex-1 flex flex-col gap-6">
         </main>
       </div>
-      <footer className="w-full border-t border-t-foreground/10 p-8 flex justify-center text-center text-xs">
+      {/* <footer className="w-full border-t border-t-foreground/10 p-8 flex justify-center text-center text-xs">
         <p>
           Powered by{" "}
           <a
@@ -43,7 +43,7 @@ export default async function ProtectedPage() {
             Supabase
           </a>
         </p>
-      </footer>
+      </footer> */}
       <ToDoFooter/>
     </div>
   );
