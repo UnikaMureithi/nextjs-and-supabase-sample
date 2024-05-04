@@ -52,6 +52,8 @@ export default function ReadToDo() {
             <TableBody>
             {toDoItems.length > 0 ? toDoItems.map((todoItem)=>(
                 <TableRow key={todoItem.id}>
+                    <TableCell className="text-center">{todoItem.id}</TableCell>
+
                     <TableCell className="text-center">{todoItem.name}</TableCell>
                     <TableCell>
                         {
